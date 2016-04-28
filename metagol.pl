@@ -68,10 +68,11 @@ prove([Atom|Atoms],Sig,MaxN,G1,G2):-
 
 %% new abduction
 prove([Atom|Atoms],Sig1,MaxN,G1,G2):-
+  Atom=[P|_],
   length(G1,L),
   L < MaxN,
-  lower_sig(Atom,P,Sig1,Sig2),
-  user:metarule(Name,MetaSub,(Atom :- Body),Sig2),
+  %% lower_sig(Atom,P,Sig1,Sig2), % removed for mutual recursion
+  user:metarule(Name,MetaSub,(Atom :- Body),Sig1),
   new_metasub(G1,sub(Name,P,MetaSub)),
   prove(Body,Sig1,MaxN,[sub(Name,P,MetaSub)|G1],G3),
   prove(Atoms,Sig1,MaxN,G3,G2).
